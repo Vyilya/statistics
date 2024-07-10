@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Список задач</h2>
+    <div class="list-group">
+        {% for task in tasks %}
+            <a href="{% url 'task_detail' task.pk %}" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">{{ task.title }}</h5>
+                <small>Статус: <span class="badge badge-info">{{ task.get_status_display }}</span></small>
+            </a>
+        {% empty %}
+            <p>Задачи отсутствуют.</p>
+        {% endfor %}
+    </div>
+    <a href="{% url 'task_create' %}" class="btn btn-primary mt-3">Создать новую задачу</a>
+{% endblock %}

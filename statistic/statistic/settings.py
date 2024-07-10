@@ -37,11 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'assigning',
-    'Calendar',
-    'my_tasks',
-    'profil',
-    'all_statistic',
+    'tasks',
 
 ]
 
@@ -60,7 +56,7 @@ ROOT_URLCONF = 'statistic.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +81,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'task_list'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

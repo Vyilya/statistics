@@ -1,0 +1,15 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ task.title }}</h2>
+            <p class="card-text">{{ task.description }}</p>
+            <p class="card-text"><small class="text-muted">Статус: <span class="badge badge-info">{{ task.get_status_display }}</span></small></p>
+            <p class="card-text"><small class="text-muted">Назначено: {{ task.assigned_to.username }}</small></p>
+            <p class="card-text"><small class="text-muted">Срок выполнения: {{ task.due_date }}</small></p>
+            <a href="{% url 'task_edit' task.pk %}" class="btn btn-primary">Редактировать задачу</a>
+        </div>
+    </div>
+{% endblock %}
