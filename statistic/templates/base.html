@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,6 +8,58 @@
     <style>
         body {
             padding-top: 6rem;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .navbar-text {
+            color: #ffffff;
+            font-size: 14px; /* Увеличим размер текста */
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .list-group-item {
+            background-color: #ffffff;
+            border-color: #dee2e6;
+            margin-bottom: 10px;
+        }
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+        .btn {
+            border-radius: 8px;
+        }
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+        /* Дополнительные стили для блока "Добро пожаловать" и "Выход" */
+        .welcome-text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px; /* Отступ справа */
+        }
+        .logout-btn {
+            background-color: #dc3545; /* Цвет кнопки Выход */
+            border-color: #dc3545;
+        }
+        .logout-btn:hover {
+            background-color: #c82333; /* Цвет кнопки Выход при наведении */
+            border-color: #bd2130;
+        }
+        .logout-btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(225, 83, 97, 0.5); /* Тень при фокусе кнопки Выход */
         }
     </style>
 </head>
@@ -31,28 +81,14 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="navbar-text">
-                            Добро пожаловать, {{ user.username }}! <a class="nav-link"</a>
+                        <span class="navbar-text welcome-text">
+                            Добро пожаловать, {{ user.username }}!
                         </span>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger logout-btn">Выход</button>
+                        </form>
                     </li>
-               <form action="{% url 'logout' %}" method="post" style="display: inline;">
-    {% csrf_token %}
-    <button type="submit" style="background-color: #4CAF50; /* Green */
-                                border: none;
-                                color: white;
-                                padding: 7px 20px;
-                                text-align: center;
-                                text-decoration: none;
-                                display: inline-block;
-                                font-size: 12px;
-                                margin: 4px 2px;
-                                cursor: pointer;
-                                border-radius: 8px;">
-        Выход
-    </button>
-</form>
-
-
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Войти</a>
@@ -70,8 +106,35 @@
         {% endblock %}
     </main>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Модальное окно для подтверждения удаления задачи -->
+    <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTaskModalLabel">Удалить задачу</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить задачу "<span id="taskTitle"></span>"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <form id="deleteTaskForm" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
 </body>
 </html>

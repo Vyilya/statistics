@@ -1,15 +1,45 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">{{ task.title }}</h2>
-            <p class="card-text">{{ task.description }}</p>
-            <p class="card-text"><small class="text-muted">Статус: <span class="badge badge-info">{{ task.get_status_display }}</span></small></p>
-            <p class="card-text"><small class="text-muted">Назначено: {{ task.assigned_to.username }}</small></p>
-            <p class="card-text"><small class="text-muted">Срок выполнения: {{ task.due_date }}</small></p>
-            <a href="{% url 'task_edit' task.pk %}" class="btn btn-primary">Редактировать задачу</a>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ task.title }}</h2>
+                <p class="card-text">{{ task.description }}</p>
+                <p class="card-text"><small class="text-muted">Статус: <span class="badge badge-info">{{ task.get_status_display }}</span></small></p>
+                <p class="card-text"><small class="text-muted">Назначено: {{ task.assigned_to.username }}</small></p>
+                <p class="card-text"><small class="text-muted">Срок выполнения: {{ task.due_date }} {{ task.due_time }}</small></p>
+
+                {% if task.status == 'in_progress' %}
+                    {% if not task.start_time %}
+                        <form method="post" action="{% url 'task_detail' pk=task.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" name="start_working" class="btn btn-primary btn-sm">Взять в работу</button>
+                        </form>
+                    {% else %}
+                        <p class="card-text"><small class="text-muted">В работе с {{ task.start_time }}</small></p>
+                        <p class="card-text"><small class="text-muted">Оставшееся время: {{ task.remaining_time }}</small></p>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'task_complete' task.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm mt-2">Завершить задачу</button>
+                    </form>
+
+                {% elif task.status == 'todo' %}
+                    <form method="post" action="{% url 'task_detail' pk=task.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="start_working" class="btn btn-primary btn-sm">Взять в работу</button>
+                    </form>
+                {% endif %}
+
+                {% if task.status == 'done' %}
+                    <p class="card-text"><small class="text-muted">Завершено {{ task.completion_time }}</small></p>
+                    <p class="card-text"><small class="text-muted">Затраченное время: {{ task.report_time_spent }}</small></p>
+                {% endif %}
+
+                <a href="{% url 'task_edit' task.pk %}" class="btn btn-primary btn-sm mt-2">Редактировать задачу</a>
+            </div>
         </div>
     </div>
 {% endblock %}

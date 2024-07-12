@@ -1,17 +1,38 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-4">
     <h2>Список задач</h2>
     <div class="list-group">
         {% for task in tasks %}
-            <a href="{% url 'task_detail' task.pk %}" class="list-group-item list-group-item-action">
-                <h5 class="mb-1">{{ task.title }}</h5>
-                <small>Статус: <span class="badge badge-info">{{ task.get_status_display }}</span></small>
+            <a href="{% url 'task_detail' task.pk %}" class="text-decoration-none text-dark">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between">
+                            {{ task.title }}
+                            <form method="post" action="{% url 'task_delete' task.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                            </form>
+                        </h5>
+                        <p class="card-text">
+                            <small>
+                                <strong>Статус:</strong> <span class="badge badge-info">{{ task.get_status_display }}</span>
+                                {% if task.status == 'done' %}
+                                    | <strong>Затраченное время:</strong> {{ task.report_time_spent }}
+                                {% elif task.status == 'todo' or task.status == 'in_progress' %}
+                                    | <strong>Оставшееся время:</strong> {{ task.remaining_time }}
+                                {% endif %}
+                                | <strong>Срок выполнения:</strong> {{ task.due_date }} {{ task.due_time }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </a>
         {% empty %}
-            <p>Задачи отсутствуют.</p>
+            <p class="mt-3">Задачи отсутствуют.</p>
         {% endfor %}
     </div>
-    <a href="{% url 'task_create' %}" class="btn btn-primary mt-3">Создать новую задачу</a>
+    <a href="{% url 'task_create' %}" class="btn btn-success mt-3">Создать новую задачу</a>
+</div>
 {% endblock %}
